@@ -1,39 +1,41 @@
-import os
 import hid
 import time
-import csv
+import sqlite3
 from datetime import datetime
 
 # Path to your USB-zyTemp CO2 sensor
 device_path = b'/dev/hidraw0'
 
-# CSV file path
-csv_file_path = 'co2_readings.csv'
+# Path to the SQLite database
+db_path = 'sensor_data.db'
 
 # Variables to store the most recent readings
 current_co2 = None
 current_temperature = None
 current_humidity = None
 
-# Check if the CSV file already exists (to prevent rewriting the header)
-file_exists = os.path.isfile(csv_file_path)
-
-def save_to_csv():
+# Function to save data to the SQLite database
+def save_to_db():
     # Get the current date and time
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    # Connect to the database
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
 
-    # Open the CSV file in append mode and write the data
-    with open(csv_file_path, mode='a', newline='') as file:
-        writer = csv.writer(file, delimiter=';')
-        # Write the header if the file is new
-        if not file_exists:
-            writer.writerow(['date', 'co2', 'temperature', 'humidity'])
+    # Insert the sensor data
+    cursor.execute("""
+        INSERT INTO sensor_data (date, co2, temperature, humidity)
+        VALUES (?, ?, ?, ?)
+    """, (current_time, current_co2, current_temperature, current_humidity))
 
-        # Round temperature and humidity to two decimal places before writing
-        writer.writerow([current_time, current_co2, round(current_temperature, 2), round(current_humidity, 2)])
+    # Commit the transaction and close the connection
+    conn.commit()
+    conn.close()
 
-    print(f"Data saved: {current_time}; {current_co2}; {round(current_temperature, 2)}; {round(current_humidity, 2)}")
+    print(f"Data saved to database: {current_time}; {current_co2}; {current_temperature:.2f}; {current_humidity:.2f}")
 
+# Function to parse and handle the data from the sensor
 def parse_data(data):
     global current_co2, current_temperature, current_humidity
 
@@ -66,9 +68,9 @@ def parse_data(data):
     else:
         print(f"Unknown metric: {metric}, value: {value}")
 
-    # If all three values (CO2, Temperature, Humidity) have been updated, save them to the CSV file
+    # If all three values (CO2, Temperature, Humidity) have been updated, save them to the database
     if current_co2 is not None and current_temperature is not None and current_humidity is not None:
-        save_to_csv()
+        save_to_db()
 
 try:
     print("Opening the device...")
