@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Readings</title>
+    <style>
+        /* Critical CSS for h1.text-center.mb-4 */
+        h1.text-center.mb-4 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            /* Add other critical styles here */
+        }
+    </style>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Current Sensor Readings</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-sm-8">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <strong>Latest Data as of {{ current_data.date }}</strong>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">CO₂ Level</h5>
+                        <p class="card-text display-4">{{ current_data.co2 }} ppm</p>
+                    </div>
+                </div>
+                <div class="card text-center mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Temperature</h5>
+                        <p class="card-text display-4">{{ current_data.temperature }} °C</p>
+                    </div>
+                </div>
+                <div class="card text-center mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Humidity</h5>
+                        <p class="card-text display-4">{{ current_data.humidity }}%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-5">
+            <a href="/" class="btn btn-primary">Back to Graph</a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies (optional for interactive components) -->
+</body>
+</html>
