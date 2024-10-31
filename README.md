@@ -28,6 +28,7 @@ This repository contains a Python script (`co2_sensor.py`) for monitoring CO2 le
    ````
 
 2. **Set up your Python environment**:
+
 If you are using a virtual environment, create and activate it:
 ```bash
 python3 -m venv myenv
@@ -38,7 +39,9 @@ source myenv/bin/activate
 pip install hidapi
 ```
 4. **Connect the CO2 Sensor**:
+
 Ensure the USB-zyTemp CO2 sensor is connected to the Raspberry Pi.
+
 5. **Run the script**:
 ```bash
 python3 co2_sensor.py
@@ -68,7 +71,8 @@ sudo nano /etc/systemd/system/co2sensor.service
 ````
 
 2. Add the following content:
-``ìni
+
+```ìni
 [Unit]
 Description=CO2 Sensor Monitoring Service
 After=network.target
@@ -83,6 +87,7 @@ User=pi
 WantedBy=multi-user.target
 ```
 3. Enable and start the service:
+
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable co2sensor.service
