@@ -98,7 +98,7 @@ def current():
         
 @app.route('/deploy_test')
 def deploy_test():
-    return render_template('deploy_test.html', number=3)
+    return render_template('deploy_test.html', number=4)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
