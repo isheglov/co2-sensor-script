@@ -1,6 +1,17 @@
-import RPi.GPIO as GPIO
+"""
+Monitor Module
+
+This script monitors CO2 levels from a SQLite database and controls a relay
+connected to a Raspberry Pi GPIO pin based on predefined CO2 thresholds.
+The relay is used to activate or deactivate a device (e.g., ventilation system)
+to maintain safe CO2 concentrations.
+"""
+
+# pylint: disable=import-error
+
 import time
 import sqlite3
+from RPi import GPIO
 
 # Configuration
 DB_PATH = '../sensor_data.db'  # Path to your SQLite database
@@ -30,9 +41,9 @@ def get_last_co2_value(db_path):
         # Return the CO2 value if available
         if result:
             return result[0]
-        else:
-            print("No data found in the database.")
-            return None
+
+        print("No data found in the database.")
+        return None
     except sqlite3.Error as e:
         print(f"Database error: {e}")
         return None
@@ -41,7 +52,7 @@ try:
     while True:
         # Get the latest CO2 value from the database
         co2_value = get_last_co2_value(DB_PATH)
-        
+
         if co2_value is not None:
             print(f"CO2 concentration: {co2_value} ppm")
 
@@ -52,7 +63,7 @@ try:
             elif co2_value < CO2_THRESHOLD_OFF:
                 GPIO.output(RELAY_PIN, GPIO.LOW)  # Turn relay off
                 print("Relay turned OFF")
-        
+
         # Wait for 5 seconds before checking again
         time.sleep(5)
 
