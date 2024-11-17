@@ -19,7 +19,7 @@ from RPi import GPIO
 # Configuration
 DB_PATH = '../sensor_data.db'  # Path to your SQLite database
 RELAY_PIN = 17  # GPIO pin connected to the relay (use the BCM numbering)
-CO2_THRESHOLD_ON = 600  # CO2 ppm level to turn relay on
+CO2_THRESHOLD_ON = 601  # CO2 ppm level to turn relay on
 FAN_DURATION = 300  # Duration to keep the fan on (in seconds)
 
 # Set up GPIO
