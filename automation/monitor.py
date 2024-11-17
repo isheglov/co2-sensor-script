@@ -44,9 +44,9 @@ def get_last_co2_value(db_path):
         # Return the CO2 value if available
         if result:
             return result[0]
-        else:
-            print("No data found in the database.")
-            return None
+
+        print("No data found in the database.")
+        return None
     except sqlite3.Error as e:
         print(f"Database error: {e}")
         return None
@@ -88,7 +88,10 @@ def main():
                         fan_active = False
                         fan_start_time = None
                     else:
-                        print(f"Fan is active. Time remaining: {int(FAN_DURATION - (current_time - fan_start_time))} seconds.")
+                        remaining_time = int(FAN_DURATION - (current_time - fan_start_time))
+                        print(
+                            f"Fan is active. Time remaining: {remaining_time} seconds."
+                        )
 
             # Wait for 5 seconds before checking again
             time.sleep(5)

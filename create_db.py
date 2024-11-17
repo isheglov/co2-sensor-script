@@ -1,8 +1,11 @@
+# pylint: disable=C0114
+# pylint: disable=import-error
+
 import sqlite3
 
-db_path = 'sensor_data.db'
+DB_PATH = 'sensor_data.db'
 
-conn = sqlite3.connect(db_path)
+conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS sensor_data (
