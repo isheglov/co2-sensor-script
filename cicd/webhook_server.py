@@ -23,6 +23,8 @@ def webhook():
             origin.pull()
 
             subprocess.run(["sudo", "systemctl", "restart", "myapp.service"], check=True)
+            subprocess.run(["sudo", "systemctl", "restart", "co2_monitor.service"], check=True)
+            subprocess.run(["sudo", "systemctl", "restart", "co2sensor.service"], check=True)
 
             return "Webhook received and application restarted!", 200
         except (GitError, subprocess.CalledProcessError) as e:
