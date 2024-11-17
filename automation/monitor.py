@@ -85,6 +85,9 @@ def main():
                     # Check if FAN_DURATION has passed since activation
                     if current_time - fan_start_time >= FAN_DURATION:
                         deactivate_fan()
+                        print("Pausing fan for 5 minutes.")
+                        time.sleep(300)
+                        print("Resuming monitoring after pause.")
                         fan_active = False
                         fan_start_time = None
                     else:
