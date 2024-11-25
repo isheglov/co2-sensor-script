@@ -54,7 +54,29 @@ def get_latest_data():
     finally:
         conn.close()
 
-def fetch_data_from_db():
+def fetch_last_day():
+    """
+    Fetch last 24 hours sensor data from the SQLite database.
+
+    Returns:
+        pandas.DataFrame: A DataFrame containing all sensor data.
+    """
+    try:
+        # Connect to the SQLite database
+        conn = sqlite3.connect(DB_NAME)
+        query = "SELECT date, co2, temperature, humidity FROM sensor_data WHERE date > datetime('now', '-24 hours');"
+        df = pd.read_sql_query(query, conn)
+
+        # Convert 'date' column to datetime
+        df['date'] = pd.to_datetime(df['date'])
+        return df
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        return pd.DataFrame()  # Return an empty DataFrame on error
+    finally:
+        conn.close()
+
+def fetch_all():
     """
     Fetch all sensor data from the SQLite database.
 
@@ -85,7 +107,7 @@ def index():
         str: Rendered HTML template.
     """
     # Fetch data from the database
-    df = fetch_data_from_db()
+    df = fetch_last_day()
 
     # Check if the DataFrame is empty
     if df.empty:
@@ -147,16 +169,6 @@ def current():
     """
     current_data = get_latest_data()
     return render_template('current.html', current_data=current_data)
-
-@app.route('/deploy_test')
-def deploy_test():
-    """
-    Render the deploy test page.
-
-    Returns:
-        str: Rendered HTML template.
-    """
-    return render_template('deploy_test.html', number=5)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
