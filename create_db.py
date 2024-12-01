@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS sensor_data (
     co2 INTEGER NOT NULL,
     temperature REAL NOT NULL,
     humidity REAL NOT NULL
-)
+);
 
 CREATE TABLE IF NOT EXISTS last_day_sensor_data (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS last_day_sensor_data (
     co2 INTEGER NOT NULL,
     temperature REAL NOT NULL,
     humidity REAL NOT NULL
-)
+);
 
 ''')
 conn.commit()
