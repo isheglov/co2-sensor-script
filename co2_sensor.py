@@ -50,6 +50,15 @@ class CO2Sensor:
                 VALUES (?, ?, ?, ?)
             """, (current_time, self.current_co2, self.current_temperature, self.current_humidity))
 
+            cursor.execute("""
+                INSERT INTO last_day_sensor_data (date, co2, temperature, humidity)
+                VALUES (?, ?, ?, ?)
+            """, (current_time, self.current_co2, self.current_temperature, self.current_humidity))
+            
+            cursor.execute("""
+                DELETE FROM last_day_sensor_data WHERE date < datetime('now', '-24 hours')
+            """)
+
             conn.commit()
             conn.close()
 
@@ -124,16 +133,14 @@ class CO2Sensor:
             ]
             self.h.send_feature_report(bytearray(report))
 
-            # Continuously read data every 5 seconds
             while True:
-                data = self.h.read(8, timeout_ms=5000)
-                # Timeout after 5 seconds if no data is received
+                data = self.h.read(8, timeout_ms=10000)
                 if data:
                     print(f"Data read: {data}")
                     self.parse_data(data)
                 else:
                     print("No data received from the device.")
-                time.sleep(5)  # Wait for 5 seconds before reading again
+                time.sleep(10) 
 
             self.h.close()
         except IOError as ex:
