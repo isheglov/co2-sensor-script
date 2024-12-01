@@ -64,7 +64,7 @@ def fetch_last_day():
     try:
         # Connect to the SQLite database
         conn = sqlite3.connect(DB_NAME)
-        query = "SELECT date, co2, temperature, humidity FROM last_day_sensor_data WHERE date > datetime('now', '-24 hours');"
+        query = "SELECT date, co2, temperature, humidity FROM last_day_sensor_data;"
         df = pd.read_sql_query(query, conn)
 
         # Convert 'date' column to datetime
