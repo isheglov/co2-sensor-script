@@ -25,7 +25,7 @@ def get_latest_data():
 
         # Fetch the latest data
         cursor.execute(
-            "SELECT date, co2, temperature, humidity FROM sensor_data ORDER BY id DESC LIMIT 1"
+            "SELECT date, co2, temperature, humidity FROM last_day_sensor_data ORDER BY id DESC LIMIT 1"
         )
         row = cursor.fetchone()
 
@@ -64,29 +64,7 @@ def fetch_last_day():
     try:
         # Connect to the SQLite database
         conn = sqlite3.connect(DB_NAME)
-        query = "SELECT date, co2, temperature, humidity FROM sensor_data WHERE date > datetime('now', '-24 hours');"
-        df = pd.read_sql_query(query, conn)
-
-        # Convert 'date' column to datetime
-        df['date'] = pd.to_datetime(df['date'])
-        return df
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-        return pd.DataFrame()  # Return an empty DataFrame on error
-    finally:
-        conn.close()
-
-def fetch_all():
-    """
-    Fetch all sensor data from the SQLite database.
-
-    Returns:
-        pandas.DataFrame: A DataFrame containing all sensor data.
-    """
-    try:
-        # Connect to the SQLite database
-        conn = sqlite3.connect(DB_NAME)
-        query = "SELECT date, co2, temperature, humidity FROM sensor_data"
+        query = "SELECT date, co2, temperature, humidity FROM last_day_sensor_data WHERE date > datetime('now', '-24 hours');"
         df = pd.read_sql_query(query, conn)
 
         # Convert 'date' column to datetime
