@@ -68,13 +68,13 @@ graph TD
 
 If you are using a virtual environment, create and activate it:
 ```bash
-python3 -m venv myenv
-source myenv/bin/activate
+python3 -m venv hid_env
+source hid_env/bin/activate
 ```
 
 3. **Install the required packages**:
 ```bash
-pip install hidapi Flask
+pip install hidapi Flask pandas plotly
 ```
 
 4. **Create the SQLite Database**: 

@@ -6,6 +6,7 @@ import pandas as pd
 from flask import Flask, render_template
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
+from werkzeug.middleware.profiler import ProfilerMiddleware
 
 app = Flask(__name__)
 
@@ -149,4 +150,6 @@ def current():
     return render_template('current.html', current_data=current_data)
 
 if __name__ == '__main__':
+    app.debug = True
+    app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[30]) # Show only top 30 slowest functions
     app.run(host='0.0.0.0', port=5000)
