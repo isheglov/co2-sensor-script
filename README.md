@@ -145,6 +145,10 @@ sudo systemctl start co2sensor.service
 
 The web interface provides real-time data visualization and displays the current CO2, temperature, and humidity readings. Access it at http://localhost:5000 (or replace localhost with your Raspberry Pi’s IP address if accessing from another device).
 
+```bash
+sudo systemctl restart myapp.service
+```
+
 ### Web Pages:
 
 - index.html: Main dashboard for real-time data visualization.
