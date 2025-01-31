@@ -1,0 +1,4 @@
+hidapi
+Flask
+pandas
+plotly

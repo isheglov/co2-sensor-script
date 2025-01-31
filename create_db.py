@@ -3,7 +3,7 @@
 
 import sqlite3
 
-DB_PATH = 'sensor_data.db'
+DB_PATH = '../sensor_data.db'
 
 conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()

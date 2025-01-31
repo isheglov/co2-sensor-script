@@ -50,11 +50,33 @@ def fetch_last_day():
     finally:
         conn.close()
 
+def resample_data(df, rule='1T'):
+    """
+    Resample the data to a specified time interval.
+    
+    Args:
+        df (pd.DataFrame): The original DataFrame with sensor data.
+        rule (str): Resampling frequency (e.g., '1T' for 1 minute).
+    
+    Returns:
+        pd.DataFrame: A DataFrame with resampled data.
+    """
+    # Ensure that 'date' is set as the index
+    if df.index.name != 'date':
+        df = df.set_index('date')
+    resampled_df = df.resample(rule).mean()
+    resampled_df.reset_index(inplace=True)
+    return resampled_df
+
 @app.route('/')
 def index():
-    df = fetch_last_day()
-    if df.empty:
+    df_orig = fetch_last_day()
+    if df_orig.empty:
         return render_template('index.html', graph_html="No data available.")
+    
+    # Resample data to one-minute intervals to reduce the number of points
+    df = resample_data(df_orig, rule='1T')
+
     fig = make_subplots(
         rows=3,
         cols=1,
