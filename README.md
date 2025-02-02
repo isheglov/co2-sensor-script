@@ -62,6 +62,7 @@ graph TD
 ```bash
    git clone https://github.com/isheglov/co2-sensor-script.git
    cd co2-sensor-script
+   cp .env.dist .env
    ```
 
 2. **Set up your Python environment**:
@@ -74,7 +75,7 @@ source hid_env/bin/activate
 
 3. **Install the required packages**:
 ```bash
-pip install hidapi Flask pandas plotly
+pip install -r requirements.txt
 ```
 
 4. **Create the SQLite Database**: 
@@ -151,8 +152,8 @@ sudo systemctl restart myapp.service
 
 ### Web Pages:
 
-- index.html: Main dashboard for real-time data visualization.
-- current.html: Shows the latest sensor readings.
+- **/**: Main dashboard for real-time data visualization.
+- **/current**: Shows the latest sensor readings.
 
 ## License
 

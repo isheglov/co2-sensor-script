@@ -2,8 +2,12 @@
 # pylint: disable=import-error
 
 import sqlite3
+import os # Standard import should be before third-party
+from dotenv import load_dotenv
 
-DB_PATH = '../sensor_data.db'
+load_dotenv()  # Load environment variables from .env file
+
+DB_PATH = os.getenv('DB_PATH')
 
 conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()

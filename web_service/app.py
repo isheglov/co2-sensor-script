@@ -8,19 +8,28 @@ from flask import Flask, render_template
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from werkzeug.middleware.profiler import ProfilerMiddleware
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
 
 app = Flask(__name__)
 
 # Determine the absolute path to the database file
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_NAME = os.path.join(BASE_DIR, 'sensor_data.db')
+DB_PATH = os.getenv('DB_PATH')
 
 def get_latest_data():
+    """Fetches the latest sensor data from the database."""
     try:
-        conn = sqlite3.connect(DB_NAME)
+        conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT date, co2, temperature, humidity FROM last_day_sensor_data ORDER BY id DESC LIMIT 1"
+            """
+            SELECT date, co2, temperature, humidity 
+            FROM last_day_sensor_data 
+            ORDER BY id DESC LIMIT 1
+            """
         )
         row = cursor.fetchone()
         if row:
@@ -38,8 +47,9 @@ def get_latest_data():
         conn.close()
 
 def fetch_last_day():
+    """Fetches the last day's sensor data from the database."""
     try:
-        conn = sqlite3.connect(DB_NAME)
+        conn = sqlite3.connect(DB_PATH)
         query = "SELECT date, co2, temperature, humidity FROM last_day_sensor_data;"
         df = pd.read_sql_query(query, conn)
         df['date'] = pd.to_datetime(df['date'])
@@ -70,10 +80,10 @@ def resample_data(df, rule='1T'):
 
 @app.route('/')
 def index():
+    """Renders the index page with sensor data plots."""
     df_orig = fetch_last_day()
     if df_orig.empty:
         return render_template('index.html', graph_html="No data available.")
-    
     # Resample data to one-minute intervals to reduce the number of points
     df = resample_data(df_orig, rule='1T')
 
@@ -81,17 +91,30 @@ def index():
         rows=3,
         cols=1,
         shared_xaxes=True,
-        subplot_titles=("CO₂ Levels Over Time", "Temperature Over Time", "Humidity Over Time")
+        subplot_titles=(
+            "CO₂ Levels Over Time",
+            "Temperature Over Time",
+            "Humidity Over Time",
+        ),
     )
-    fig.add_trace(go.Scatter(x=df['date'], y=df['co2'], mode='lines', name='CO₂ over time'), row=1, col=1)
-    fig.add_trace(go.Scatter(x=df['date'], y=df['temperature'], mode='lines', name='Temperature (°C)'), row=2, col=1)
-    fig.add_trace(go.Scatter(x=df['date'], y=df['humidity'], mode='lines', name='Humidity (%)'), row=3, col=1)
+    fig.add_trace(
+        go.Scatter(x=df['date'], y=df['co2'], mode='lines', name='CO₂ over time'), row=1, col=1
+        )
+    fig.add_trace(
+        go.Scatter(x=df['date'], y=df['temperature'], mode='lines', name='Temperature (°C)'),
+        row=2,
+        col=1
+        )
+    fig.add_trace(
+        go.Scatter(x=df['date'], y=df['humidity'], mode='lines', name='Humidity (%)'), row=3, col=1
+        )
     fig.update_layout(title='Sensor Data Over Time', xaxis_title='Time', height=800)
     graph_html = fig.to_html(full_html=False)
     return render_template('index.html', graph_html=graph_html)
 
 @app.route('/current')
 def current():
+    """Renders the current data page."""
     current_data = get_latest_data()
     return render_template('current.html', current_data=current_data)
 

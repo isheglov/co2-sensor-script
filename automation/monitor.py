@@ -13,11 +13,16 @@ to reduce the CO2 concentration. After 5 minutes, the fan is automatically turne
 # pylint: disable=import-error
 
 import time
+import os  # Standard import should be before third-party
 import sqlite3
 from RPi import GPIO
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
+
 
 # Configuration
-DB_PATH = '../sensor_data.db'  # Path to your SQLite database
+DB_PATH = os.getenv('DB_PATH')  # Path to your SQLite database
 RELAY_PIN = 17  # GPIO pin connected to the relay (use the BCM numbering)
 CO2_THRESHOLD_ON = 800  # CO2 ppm level to turn relay on
 FAN_DURATION = 300  # Duration to keep the fan on (in seconds)

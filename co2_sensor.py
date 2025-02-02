@@ -10,7 +10,7 @@ import hid
 DEVICE_PATH = b'/dev/hidraw0'
 
 # Path to the SQLite database
-DB_PATH = 'sensor_data.db'
+DB_PATH = '../sensor_data.db'
 
 
 class CO2Sensor:
@@ -54,7 +54,6 @@ class CO2Sensor:
                 INSERT INTO last_day_sensor_data (date, co2, temperature, humidity)
                 VALUES (?, ?, ?, ?)
             """, (current_time, self.current_co2, self.current_temperature, self.current_humidity))
-            
             cursor.execute("""
                 DELETE FROM last_day_sensor_data WHERE date < datetime('now', '-24 hours')
             """)
@@ -140,7 +139,7 @@ class CO2Sensor:
                     self.parse_data(data)
                 else:
                     print("No data received from the device.")
-                time.sleep(10) 
+                time.sleep(10)
 
             self.h.close()
         except IOError as ex:

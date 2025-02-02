@@ -2,3 +2,5 @@ hidapi
 Flask
 pandas
 plotly
+werkzeug
+python-dotenv

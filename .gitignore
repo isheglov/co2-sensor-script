@@ -2,3 +2,4 @@ sensor_data.db
 co2_readings.csv
 __pycache__
 .DS_Store
+.env
