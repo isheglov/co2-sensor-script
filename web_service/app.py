@@ -10,7 +10,7 @@ from plotly.subplots import make_subplots
 from werkzeug.middleware.profiler import ProfilerMiddleware
 from dotenv import load_dotenv
 
-load_dotenv()  # Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -71,7 +71,6 @@ def resample_data(df, rule='1T'):
     Returns:
         pd.DataFrame: A DataFrame with resampled data.
     """
-    # Ensure that 'date' is set as the index
     if df.index.name != 'date':
         df = df.set_index('date')
     resampled_df = df.resample(rule).mean()
@@ -84,7 +83,7 @@ def index():
     df_orig = fetch_last_day()
     if df_orig.empty:
         return render_template('index.html', graph_html="No data available.")
-    # Resample data to one-minute intervals to reduce the number of points
+
     df = resample_data(df_orig, rule='1T')
 
     fig = make_subplots(

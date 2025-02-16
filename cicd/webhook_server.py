@@ -27,19 +27,17 @@ def webhook():
             origin.pull()
             print("Successfully pulled the latest changes.")
 
-            # List of services to restart
             services = ["myapp.service", "co2_monitor.service", "co2sensor.service"]
 
             for service in services:
                 print(f"Attempting to restart service: {service}")
                 try:
-                    # Execute the systemctl restart command
                     result = subprocess.run(
                         ["sudo", "systemctl", "restart", service],
                         check=True,
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
-                        text=True  # Ensures that output is returned as a string
+                        text=True
                     )
                     print(f"Successfully restarted {service}.")
                     print(f"Standard Output: {result.stdout}")
@@ -49,8 +47,6 @@ def webhook():
                     print(f"Return Code: {e.returncode}")
                     print(f"Output: {e.output}")
                     print(f"Error: {e.stderr}")
-                    # Optionally, you can choose to abort further restarts if one fails
-                    # abort(500, description=f"Failed to restart {service}.")
 
             return "Webhook received and application restarted!", 200
         except GitError as e:

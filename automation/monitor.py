@@ -13,16 +13,15 @@ to reduce the CO2 concentration. After 5 minutes, the fan is automatically turne
 # pylint: disable=import-error
 
 import time
-import os  # Standard import should be before third-party
+import os
 import sqlite3
 from RPi import GPIO
 from dotenv import load_dotenv
 
-load_dotenv()  # Load environment variables from .env file
-
+load_dotenv()
 
 # Configuration
-DB_PATH = os.getenv('DB_PATH')  # Path to your SQLite database
+DB_PATH = os.getenv('DB_PATH')
 RELAY_PIN = 17  # GPIO pin connected to the relay (use the BCM numbering)
 CO2_THRESHOLD_ON = 800  # CO2 ppm level to turn relay on
 FAN_DURATION = 300  # Duration to keep the fan on (in seconds)
@@ -30,23 +29,19 @@ FAN_DURATION = 300  # Duration to keep the fan on (in seconds)
 # Set up GPIO
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(RELAY_PIN, GPIO.OUT)
-GPIO.output(RELAY_PIN, GPIO.LOW)  # Start with the relay off
+GPIO.output(RELAY_PIN, GPIO.LOW)
 
 def get_last_co2_value(db_path):
     """Retrieve the most recent CO2 value from the database."""
     try:
-        # Connect to the SQLite database
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
 
-        # Query the last CO2 value from the sensor_data table
         cursor.execute("SELECT co2 FROM sensor_data ORDER BY id DESC LIMIT 1")
         result = cursor.fetchone()
 
-        # Close the connection
         conn.close()
 
-        # Return the CO2 value if available
         if result:
             return result[0]
 
@@ -58,12 +53,12 @@ def get_last_co2_value(db_path):
 
 def activate_fan():
     """Activate the fan by turning the relay on."""
-    GPIO.output(RELAY_PIN, GPIO.HIGH)  # Turn relay on
+    GPIO.output(RELAY_PIN, GPIO.HIGH)
     print("Relay turned ON - Fan activated.")
 
 def deactivate_fan():
     """Deactivate the fan by turning the relay off."""
-    GPIO.output(RELAY_PIN, GPIO.LOW)  # Turn relay off
+    GPIO.output(RELAY_PIN, GPIO.LOW)
     print("Relay turned OFF - Fan deactivated.")
 
 def main():
@@ -73,7 +68,6 @@ def main():
 
     try:
         while True:
-            # Get the latest CO2 value from the database
             co2_value = get_last_co2_value(DB_PATH)
 
             if co2_value is not None:
@@ -87,7 +81,6 @@ def main():
                         fan_active = True
                         fan_start_time = current_time
                 else:
-                    # Check if FAN_DURATION has passed since activation
                     if current_time - fan_start_time >= FAN_DURATION:
                         deactivate_fan()
                         print("Pausing fan for 5 minutes.")
@@ -101,7 +94,6 @@ def main():
                             f"Fan is active. Time remaining: {remaining_time} seconds."
                         )
 
-            # Wait for 5 seconds before checking again
             time.sleep(5)
 
     except KeyboardInterrupt:
@@ -110,7 +102,6 @@ def main():
     finally:
         if fan_active:
             deactivate_fan()
-        # Clean up GPIO settings
         GPIO.cleanup()
         print("GPIO cleanup done")
 

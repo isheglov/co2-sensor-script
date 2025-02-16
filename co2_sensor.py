@@ -6,12 +6,9 @@ import sqlite3
 from datetime import datetime
 import hid
 
-# Path to your USB-zyTemp CO2 sensor
 DEVICE_PATH = b'/dev/hidraw0'
 
-# Path to the SQLite database
 DB_PATH = '../sensor_data.db'
-
 
 class CO2Sensor:
     """
@@ -86,14 +83,12 @@ class CO2Sensor:
         value_low = sensor_data[2]
         r4 = sensor_data[4]
 
-        # Combine high and low bytes into the final value
         value = (value_high << 8) + value_low
 
         if r4 != 0x0D:  # Ensure that the terminator byte is correct
             print("Invalid data received.")
             return
 
-        # Process the metric type
         if metric == 0x50:  # CO2 reading (0x50 = 80 in decimal)
             self.current_co2 = value
             print(f"CO2 Level: {self.current_co2} ppm")
@@ -123,7 +118,7 @@ class CO2Sensor:
         try:
             print("Opening the device...")
             self.h = hid.device()
-            self.h.open_path(self.device_path)  # Open the device by its path
+            self.h.open_path(self.device_path) 
 
             # Send a basic feature report to initialize the device
             report = [

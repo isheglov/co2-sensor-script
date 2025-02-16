@@ -2,10 +2,10 @@
 # pylint: disable=import-error
 
 import sqlite3
-import os # Standard import should be before third-party
+import os
 from dotenv import load_dotenv
 
-load_dotenv()  # Load environment variables from .env file
+load_dotenv()
 
 DB_PATH = os.getenv('DB_PATH')
 
