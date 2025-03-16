@@ -118,7 +118,7 @@ class CO2Sensor:
         try:
             print("Opening the device...")
             self.h = hid.device()
-            self.h.open_path(self.device_path) 
+            self.h.open_path(self.device_path)
 
             # Send a basic feature report to initialize the device
             report = [
