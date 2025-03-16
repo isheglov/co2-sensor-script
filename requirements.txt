@@ -4,3 +4,5 @@ pandas
 plotly
 werkzeug
 python-dotenv
+pytest
+pytest-mock

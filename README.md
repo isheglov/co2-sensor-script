@@ -159,9 +159,70 @@ sudo systemctl restart myapp.service
 
 This project is licensed under the MIT License - see the [LICENCE](LICENSE) file for details.
 
+## Testing
+
+The project includes a comprehensive test suite to verify functionality of the CO2 sensor code.
+
+### Running Tests
+
+To run all tests:
+```bash
+# Activate your virtual environment first
+source hid_env/bin/activate
+
+# Run all tests with pytest
+pytest tests/
+```
+
+To run a specific test file:
+```bash
+pytest tests/test_co2_sensor.py
+```
+
+To run a specific test method:
+```bash
+pytest tests/test_co2_sensor.py::TestCO2Sensor::test_parse_data_co2
+```
+
+### Test Coverage
+
+The tests cover:
+- CO2, temperature, and humidity data parsing
+- Database operations
+- Device communication and error handling
+- Edge cases and invalid data handling
+
+### Writing New Tests
+
+When adding new functionality, please include appropriate tests following these guidelines:
+- Use unittest or pytest frameworks
+- Mock external dependencies (database, hardware devices)
+- Use descriptive test method names
+- Include docstrings describing what each test verifies
+
+## Continuous Integration
+
+This project uses GitHub Actions for continuous integration:
+
+1. **Pylint**: Automatically checks code quality on every push
+   - Verifies code against PEP 8 style guidelines
+   - Runs on Python 3.8, 3.9, and 3.10
+
+2. **Pytest**: Runs the test suite on every push and pull request
+   - Executes all unit tests
+   - Generates test coverage reports
+   - Runs on Python 3.8, 3.9, and 3.10
+
+GitHub Actions workflow files can be found in `.github/workflows/`.
+
 ## Contributing
 
 Contributions are welcome! Please fork the repository and submit a pull request.
+
+1. Ensure your code follows the style guidelines in CLAUDE.md
+2. Add tests for new functionality
+3. Verify all tests pass before submitting your PR
+4. Maintain or improve test coverage
 
 ## Contact
 
